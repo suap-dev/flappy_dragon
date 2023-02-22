@@ -1,6 +1,7 @@
 #![warn(clippy::all, clippy::pedantic, clippy::nursery)]
 
 pub mod state;
+pub mod player;
 
 use bracket_lib::prelude::*;
 use state::State;
