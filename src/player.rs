@@ -13,11 +13,11 @@ impl Player {
             velocity: 0.0,
         }
     }
-    fn render(&mut self, ctx: &mut BTerm) {
+    pub fn render(&mut self, ctx: &mut BTerm) {
         ctx.set(0, self.y, YELLOW, BLACK, to_cp437('@'));
     }
 
-    fn gravity_and_move(&mut self) {
+    pub fn gravity_and_move(&mut self) {
         if self.velocity < 2.0 {
             self.velocity += 0.2;
         }
