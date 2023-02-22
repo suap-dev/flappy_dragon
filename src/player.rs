@@ -1,9 +1,9 @@
 use bracket_lib::prelude::*;
 
 pub struct Player {
-    x: i32,
-    y: i32,
-    velocity: f32,
+    pub x: i32,
+    pub y: i32,
+    pub velocity: f32,
 }
 impl Player {
     pub const fn new(x: i32, y: i32) -> Self {
@@ -28,7 +28,7 @@ impl Player {
         }
     }
 
-    fn flap(&mut self) {
+    pub fn flap(&mut self) {
         self.velocity = -2.0;
     }
 }
