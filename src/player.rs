@@ -1,12 +1,19 @@
 use bracket_lib::prelude::*;
 
+const PLAYER_SPRITE_X: i32 = 0;
+
+/// Player (Dragon) in game world.
+///
+/// x, y - coordinate in game world
+/// 0, y - coordinates on the screen
+/// velocity - vertical velocity
 pub struct Player {
     pub x: i32,
     pub y: i32,
     pub velocity: f32,
 }
 impl Player {
-    pub const fn new(x: i32, y: i32) -> Self {
+    pub fn new(x: i32, y: i32) -> Self {
         Self {
             x,
             y,
@@ -14,7 +21,7 @@ impl Player {
         }
     }
     pub fn render(&mut self, ctx: &mut BTerm) {
-        ctx.set(0, self.y, YELLOW, BLACK, to_cp437('@'));
+        ctx.set(PLAYER_SPRITE_X, self.y, YELLOW, BLACK, to_cp437('@'));
     }
 
     pub fn gravity_and_move(&mut self) {
