@@ -49,7 +49,7 @@ impl Obstacle {
             ctx.set(screen_x, y, RED, BLACK, to_cp437('|'));
         }
     }
-    pub fn was_hit(&mut self, player: &Player) -> bool {
+    pub fn hit(&mut self, player: &Player) -> bool {
         // if player is at the same X and NOT inside the gap:
         player.x == self.x && !(player.y < self.gap_top && player.y > self.gap_bottom)
     }

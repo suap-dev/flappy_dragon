@@ -94,7 +94,7 @@ impl FlappyDragon {
             self.obstacle = Obstacle::new(self.player.x + SCREEN_WIDTH, self.score);
             // transformed x coordinate
         }
-        if self.player.y > SCREEN_HEIGHT {
+        if self.player.y > SCREEN_HEIGHT || self.obstacle.hit(&self.player){
             self.mode = GameMode::Dead;
         }
 
