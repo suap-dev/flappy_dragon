@@ -28,21 +28,25 @@ impl GameState for FlappyDragon {
     }
 }
 impl FlappyDragon {
-    pub fn new() -> Self {
+    pub(crate) fn new() -> Self {
+        let score = 0;
         Self {
             mode: GameMode::Menu,
             frame_time: 0.0,
-
             player: Player::new(5, 25),
-            obstacle: Obstacle::new(SCREEN_WIDTH, 0),
-            score: 0,
+            obstacle: Obstacle::new(SCREEN_WIDTH, score),
+            score,
         }
     }
 
     fn new_game(&mut self) {
         self.player = Player::new(5, 25);
+        self.score = 0;
+        self.obstacle = Obstacle::new(SCREEN_WIDTH, self.score);
+
         self.frame_time = 0.0;
-        self.mode = GameMode::Playing;
+        
+        self.mode = GameMode::Playing;        
     }
     fn quit_game(ctx: &mut BTerm) {
         ctx.quitting = true;
