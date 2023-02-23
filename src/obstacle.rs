@@ -9,8 +9,11 @@ use crate::{consts::SCREEN_HEIGHT, player::Player};
 pub struct Obstacle {
     pub x: i32,
 
-    gap_y: i32,
-    gap_size: i32,
+    // gap_y: i32,
+    // gap_size: i32,
+    gap_top: i32,
+    gap_bottom: i32,
+    obstacle: Vec<i32>,
     /*
        obstacle looks like this:
                                    |
@@ -26,28 +29,33 @@ pub struct Obstacle {
 impl Obstacle {
     pub fn new(x: i32, score: i32) -> Self {
         let mut random = RandomNumberGenerator::new();
+        let gap_y = random.range(10, 40);
+        let gap_size = i32::max(2, 20 - score);
+
+        let gap_top = gap_y - gap_size / 2;
+        let gap_bottom = gap_y + gap_size / 2;
+
+        let obstacle = (0..gap_top)
+            .into_iter()
+            .chain((gap_bottom..SCREEN_HEIGHT).into_iter())
+            .collect();
+
         Self {
             x,
-            gap_y: random.range(10, 40),
-            gap_size: i32::max(2, 20 - score),
+            gap_top,
+            gap_bottom,
+            obstacle,
         }
     }
     pub fn render(&mut self, ctx: &mut BTerm, player_x: i32) {
         let screen_x = self.x - player_x;
 
-        for y in 0..(self.gap_y - self.gap_size / 2) {
-            ctx.set(screen_x, y, RED, BLACK, to_cp437('|'));
-        }
-
-        for y in (self.gap_y + self.gap_size / 2)..SCREEN_HEIGHT {
+        for &y in &self.obstacle {
             ctx.set(screen_x, y, RED, BLACK, to_cp437('|'));
         }
     }
-    pub fn hit_obstacle(&mut self, player: &Player) -> bool {
-        let gap_top = self.gap_y - self.gap_size / 2;
-        let gap_bottom = self.gap_y + self.gap_size / 2;
-
+    pub fn was_hit(&mut self, player: &Player) -> bool {
         // if player is at the same X and NOT inside the gap:
-        player.x == self.x && !(player.y < gap_top && player.y > gap_bottom)
+        player.x == self.x && !(player.y < self.gap_top && player.y > self.gap_bottom)
     }
 }
