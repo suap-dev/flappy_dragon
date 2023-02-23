@@ -3,24 +3,19 @@ use bracket_lib::prelude::*;
 use crate::{consts::SCREEN_HEIGHT, player::Player};
 
 /// Obstacle in game world
-/// `x` - position in game world
-/// `gap_y` - center of the gap
-/// `gap_size` - size of the gap
 pub struct Obstacle {
     pub x: i32,
-
-    // gap_y: i32,
-    // gap_size: i32,
     gap_top: i32,
     gap_bottom: i32,
+
     obstacle: Vec<i32>,
     /*
        obstacle looks like this:
                                    |
                                    |
-                                   |
-                       gap_y _             } gap size
-                                           } --------
+                                   |    _  gap_top
+                            
+                                        _  gap_bottom
                                    |
                                    |
                                    |
