@@ -65,6 +65,7 @@ impl FlappyDragon {
     fn dead(&mut self, ctx: &mut BTerm) {
         ctx.cls();
         ctx.print_centered(5, "You died.");
+        ctx.print_centered(6, format!("Your score: {}", self.score));
         ctx.print_centered(8, "(P) Play Again");
         ctx.print_centered(9, "(Q) Quit GAme");
 
@@ -100,6 +101,6 @@ impl FlappyDragon {
         self.player.render(ctx);
         self.obstacle.render(ctx, self.player.x);
         ctx.print(0, 0, "Press SPACE to flap.");
-        ctx.print(0, 1, &format!("Score: {}", self.score));
+        ctx.print(0, 1, format!("Score: {}", self.score));
     }
 }
