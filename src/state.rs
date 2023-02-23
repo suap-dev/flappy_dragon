@@ -1,4 +1,5 @@
 use crate::player::Player;
+use crate::consts::*;
 use bracket_lib::prelude::*;
 
 #[derive(Debug)]
@@ -7,10 +8,6 @@ enum GameMode {
     Playing,
     End,
 }
-
-const SCREEN_WIDTH: i32 = 80;
-const SCREEN_HEIGHT: i32 = 50;
-const FRAME_DURATION: f32 = 75.0; // ms; meaning 13.(3) fps
 
 pub struct State {
     player: Player,
