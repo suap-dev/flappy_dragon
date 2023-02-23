@@ -10,7 +10,7 @@ enum GameMode {
     Dead,
 }
 
-pub struct FlappyDragonGame {
+pub struct FlappyDragon {
     mode: GameMode,
     frame_time: f32,
 
@@ -18,7 +18,7 @@ pub struct FlappyDragonGame {
     obstacle: Obstacle,
     score: i32,
 }
-impl GameState for FlappyDragonGame {
+impl GameState for FlappyDragon {
     fn tick(&mut self, ctx: &mut BTerm) {
         match self.mode {
             GameMode::Menu => self.menu(ctx),
@@ -27,7 +27,7 @@ impl GameState for FlappyDragonGame {
         }
     }
 }
-impl FlappyDragonGame {
+impl FlappyDragon {
     pub fn new() -> Self {
         Self {
             mode: GameMode::Menu,
@@ -39,9 +39,15 @@ impl FlappyDragonGame {
         }
     }
 
-    fn quit_game(&self, ctx: &mut BTerm) {
+    fn new_game(&mut self) {
+        self.player = Player::new(5, 25);
+        self.frame_time = 0.0;
+        self.mode = GameMode::Playing;
+    }
+    fn quit_game(ctx: &mut BTerm) {
         ctx.quitting = true;
     }
+
     fn menu(&mut self, ctx: &mut BTerm) {
         ctx.cls();
         ctx.print_centered(5, "Welcome to Flappy Dragon!");
@@ -51,7 +57,7 @@ impl FlappyDragonGame {
         if let Some(key) = ctx.key {
             match key {
                 VirtualKeyCode::P => self.new_game(),
-                VirtualKeyCode::Q => self.quit_game(ctx),
+                VirtualKeyCode::Q => Self::quit_game(ctx),
                 _other => {}
             }
         }
@@ -65,7 +71,7 @@ impl FlappyDragonGame {
         if let Some(key) = ctx.key {
             match key {
                 VirtualKeyCode::P => self.new_game(),
-                VirtualKeyCode::Q => self.quit_game(ctx),
+                VirtualKeyCode::Q => Self::quit_game(ctx),
                 _other => {}
             }
         }
@@ -95,10 +101,5 @@ impl FlappyDragonGame {
         self.obstacle.render(ctx, self.player.x);
         ctx.print(0, 0, "Press SPACE to flap.");
         ctx.print(0, 1, &format!("Score: {}", self.score));
-    }
-    fn new_game(&mut self) {
-        self.player = Player::new(5, 25);
-        self.frame_time = 0.0;
-        self.mode = GameMode::Playing;
     }
 }

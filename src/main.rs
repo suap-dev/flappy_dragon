@@ -6,7 +6,7 @@ pub mod obstacle;
 pub mod consts;
 
 use bracket_lib::prelude::*;
-use game::FlappyDragonGame;
+use game::FlappyDragon;
 
 
 fn main() -> BError {
@@ -14,5 +14,5 @@ fn main() -> BError {
         .with_title("Flappy Dragon")
         .build()?;
 
-    main_loop(context, FlappyDragonGame::new())
+    main_loop(context, FlappyDragon::new())
 }
