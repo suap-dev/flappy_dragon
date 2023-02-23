@@ -1,4 +1,4 @@
-use crate::consts::*;
+use crate::consts::{SCREEN_WIDTH, FRAME_DURATION, SCREEN_HEIGHT};
 use crate::obstacle::Obstacle;
 use crate::player::Player;
 use bracket_lib::prelude::*;
