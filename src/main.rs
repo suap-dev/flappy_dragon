@@ -2,6 +2,8 @@
 
 pub mod state;
 pub mod player;
+pub mod obstacle;
+pub mod consts;
 
 use bracket_lib::prelude::*;
 use state::State;
