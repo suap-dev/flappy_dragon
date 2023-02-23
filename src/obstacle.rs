@@ -27,7 +27,7 @@ pub struct Obstacle {
     */
 }
 impl Obstacle {
-    pub fn new(x: i32, score: i32) -> Self {
+    pub(crate) fn new(x: i32, score: i32) -> Self {
         let mut random = RandomNumberGenerator::new();
         let gap_y = random.range(10, 40);
         let gap_size = i32::max(2, 20 - score);
