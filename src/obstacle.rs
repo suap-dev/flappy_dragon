@@ -3,7 +3,7 @@ use bracket_lib::prelude::*;
 use crate::{consts::SCREEN_HEIGHT, player::Player};
 
 pub struct Obstacle {
-    x: i32,
+    pub x: i32,
     gap_y: i32,
     gap_size: i32,
     /*

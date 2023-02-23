@@ -1,5 +1,6 @@
-use crate::player::Player;
 use crate::consts::*;
+use crate::obstacle::Obstacle;
+use crate::player::Player;
 use bracket_lib::prelude::*;
 
 #[derive(Debug)]
@@ -10,16 +11,22 @@ enum GameMode {
 }
 
 pub struct State {
-    player: Player,
-    frame_time: f32,
     mode: GameMode,
+    frame_time: f32,
+
+    player: Player,
+    obstacle: Obstacle,
+    score: i32,
 }
 impl State {
-    pub const fn new() -> Self {
+    pub fn new() -> Self {
         Self {
-            player: Player::new(5, 25),
-            frame_time: 0.0,
             mode: GameMode::Menu,
+            frame_time: 0.0,
+
+            player: Player::new(5, 25),
+            obstacle: Obstacle::new(SCREEN_WIDTH, 0),
+            score: 0,
         }
     }
 
@@ -65,17 +72,22 @@ impl State {
         }
 
         self.player.gravity_and_move();
-
-        if let Some(VirtualKeyCode::Space) = ctx.key {
-            self.player.flap();
+        if self.player.x > self.obstacle.x {
+            self.score += 1;
+            self.obstacle = Obstacle::new(self.player.x + SCREEN_WIDTH, self.score);
         }
-
-        self.player.render(ctx);
-        ctx.print(0, 0, "Press SPACE to flap.");
-
         if self.player.y > SCREEN_HEIGHT {
             self.mode = GameMode::End;
         }
+
+        if ctx.key == Some(VirtualKeyCode::Space) {
+            self.player.flap();
+        }
+
+        ctx.print(0, 0, "Press SPACE to flap.");
+        ctx.print(0, 1, &format!("Score: {}", self.score));
+        self.player.render(ctx);
+        self.obstacle.render(ctx, self.player.x);
     }
     fn restart(&mut self) {
         self.player = Player::new(5, 25);
