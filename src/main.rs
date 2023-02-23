@@ -1,12 +1,12 @@
 #![warn(clippy::all, clippy::pedantic, clippy::nursery)]
 
-pub mod state;
+pub mod game;
 pub mod player;
 pub mod obstacle;
 pub mod consts;
 
 use bracket_lib::prelude::*;
-use state::State;
+use game::FlappyDragonGame;
 
 
 fn main() -> BError {
@@ -14,5 +14,5 @@ fn main() -> BError {
         .with_title("Flappy Dragon")
         .build()?;
 
-    main_loop(context, State::new())
+    main_loop(context, FlappyDragonGame::new())
 }

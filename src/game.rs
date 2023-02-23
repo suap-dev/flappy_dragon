@@ -1,4 +1,4 @@
-use crate::consts::{SCREEN_WIDTH, FRAME_DURATION, SCREEN_HEIGHT};
+use crate::consts::{FRAME_DURATION, SCREEN_HEIGHT, SCREEN_WIDTH};
 use crate::obstacle::Obstacle;
 use crate::player::Player;
 use bracket_lib::prelude::*;
@@ -7,10 +7,10 @@ use bracket_lib::prelude::*;
 enum GameMode {
     Menu,
     Playing,
-    End,
+    Dead,
 }
 
-pub struct State {
+pub struct FlappyDragonGame {
     mode: GameMode,
     frame_time: f32,
 
@@ -18,7 +18,16 @@ pub struct State {
     obstacle: Obstacle,
     score: i32,
 }
-impl State {
+impl GameState for FlappyDragonGame {
+    fn tick(&mut self, ctx: &mut BTerm) {
+        match self.mode {
+            GameMode::Menu => self.menu(ctx),
+            GameMode::Playing => self.playing(ctx),
+            GameMode::Dead => self.dead(ctx),
+        }
+    }
+}
+impl FlappyDragonGame {
     pub fn new() -> Self {
         Self {
             mode: GameMode::Menu,
@@ -30,9 +39,10 @@ impl State {
         }
     }
 
-    fn main_menu(&mut self, ctx: &mut BTerm) {
-        println!("{:?}", self.mode);
-
+    fn quit_game(&self, ctx: &mut BTerm) {
+        ctx.quitting = true;
+    }
+    fn menu(&mut self, ctx: &mut BTerm) {
         ctx.cls();
         ctx.print_centered(5, "Welcome to Flappy Dragon!");
         ctx.print_centered(8, "(P) Play Game");
@@ -40,15 +50,13 @@ impl State {
 
         if let Some(key) = ctx.key {
             match key {
-                VirtualKeyCode::P => self.restart(),
-                VirtualKeyCode::Q => ctx.quitting = true,
-                _ => {}
+                VirtualKeyCode::P => self.new_game(),
+                VirtualKeyCode::Q => self.quit_game(ctx),
+                _other => {}
             }
         }
     }
     fn dead(&mut self, ctx: &mut BTerm) {
-        println!("{:?}", self.mode);
-
         ctx.cls();
         ctx.print_centered(5, "You died.");
         ctx.print_centered(8, "(P) Play Again");
@@ -56,15 +64,13 @@ impl State {
 
         if let Some(key) = ctx.key {
             match key {
-                VirtualKeyCode::P => self.restart(),
-                VirtualKeyCode::Q => ctx.quitting = true,
-                _ => {}
+                VirtualKeyCode::P => self.new_game(),
+                VirtualKeyCode::Q => self.quit_game(ctx),
+                _other => {}
             }
         }
     }
-    fn play(&mut self, ctx: &mut BTerm) {
-        println!("{:?}", self.mode);
-
+    fn playing(&mut self, ctx: &mut BTerm) {
         ctx.cls_bg(NAVY);
         self.frame_time += ctx.frame_time_ms;
         if self.frame_time > FRAME_DURATION {
@@ -75,32 +81,24 @@ impl State {
         if self.player.x > self.obstacle.x {
             self.score += 1;
             self.obstacle = Obstacle::new(self.player.x + SCREEN_WIDTH, self.score);
+            // transformed x coordinate
         }
         if self.player.y > SCREEN_HEIGHT {
-            self.mode = GameMode::End;
+            self.mode = GameMode::Dead;
         }
 
         if ctx.key == Some(VirtualKeyCode::Space) {
             self.player.flap();
         }
 
-        ctx.print(0, 0, "Press SPACE to flap.");
-        ctx.print(0, 1, &format!("Score: {}", self.score));
         self.player.render(ctx);
         self.obstacle.render(ctx, self.player.x);
+        ctx.print(0, 0, "Press SPACE to flap.");
+        ctx.print(0, 1, &format!("Score: {}", self.score));
     }
-    fn restart(&mut self) {
+    fn new_game(&mut self) {
         self.player = Player::new(5, 25);
         self.frame_time = 0.0;
         self.mode = GameMode::Playing;
-    }
-}
-impl GameState for State {
-    fn tick(&mut self, ctx: &mut BTerm) {
-        match self.mode {
-            GameMode::Menu => self.main_menu(ctx),
-            GameMode::Playing => self.play(ctx),
-            GameMode::End => self.dead(ctx),
-        }
     }
 }
